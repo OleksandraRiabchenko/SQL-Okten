@@ -1,0 +1,87 @@
+SELECT * FROM `apr-2021`.students;
+
+select name, age from `apr-2021`.students;
+
+select * from `apr-2021`.students where age = 15;
+
+select * from `apr-2021`.students where name = 'rOmAn';
+
+select * from `apr-2021`.students where name like '%n';
+
+select * from `apr-2021`.students where name like 'o%';
+
+select * from `apr-2021`.students where name like '%o%';
+
+select * from `apr-2021`.students where name like '___o%';
+
+select * from `apr-2021`.students where length(name) = 4;
+
+select * from `apr-2021`.students order by age;
+
+select * from `apr-2021`.students order by age desc;
+
+select * from `apr-2021`.students order by name desc;
+
+select * from `apr-2021`.students where gender like 'm%' order by age;
+select * from `apr-2021`.students where gender = 'male' order by age desc;
+
+select * from `apr-2021`.students where age > 18;
+
+select * from `apr-2021`.students where age != 18;
+
+select * from `apr-2021`.students where age between 10 and 29;
+select * from `apr-2021`.students where age >= 10 and age <= 29;
+
+select * from `apr-2021`.students where name between 'a' and 'c';
+
+select * from `apr-2021`.students where age > 18 and gender = 'female';
+select * from `apr-2021`.students where age > 18 and gender like 'f%' and name like 'k%';
+
+select * from `apr-2021`.students where age = 18 or  gender like 'f%';
+
+select * from `apr-2021`.students where age = 20 or age = 25 or age = 30; -- bad
+select * from `apr-2021`.students where age in (20, 25, 30); -- good
+
+select * from `apr-2021`.students where name in ('roman', 'mary');
+
+-- агрегатні ф-ції: max, mi, avg, count, sum 
+select max(age) from `apr-2021`.students; 
+select min(age) from `apr-2021`.students;
+select avg(age) from `apr-2021`.students; -- середне
+select sum(age) from `apr-2021`.students; 
+
+select count(age) from `apr-2021`.students; -- рахує кількість полів де age != null
+select count(age) from `apr-2021`.students where gender ='male'; -- рахує кількість полів де age != null & gender ='male'
+
+select min(age), gender from `apr-2021`.students group by gender; -- виводить мін вік по групам зі статтю
+select count(age), gender from `apr-2021`.students group by gender; -- рахує к-сть заповнених полів віку по групам зі статтю
+
+select 
+	avg(rating) as avgRat,
+	count(rating) as countRat,
+    student_id
+	from `apr-2021`.ratings
+	group by student_id;
+    
+-- приклад використання as для перейменнування
+--    [
+--     {'avg(rating)': 1, 'count(rating)': 1},
+--     { avgRat: 1, countRat: 1}
+--     ]
+
+-- пагінація
+-- perPage=3&page1
+select * from `apr-2021`.students limit 3 offset 0;
+select * from `apr-2021`.students limit 3 offset 3;
+select * from `apr-2021`.students limit 3 offset 6;
+select * from `apr-2021`.students limit 3 offset 9;
+
+ -- `select * from `apr-2021`.students limit ${perPage} offset ${(page - 1) * perPage}`;
+  select * from `apr-2021`.students limit 5 offset 10;
+
+update `apr-2021`.students set age = 20 where age >= 40 limit 1000; -- обов'язково ставити limit
+
+update `apr-2021`.students set name = 'Karina' where age = 15 limit 1000;
+
+delete from `apr-2021`.students where age <= 15 limit 1000; -- не видалить через те, що цей студент прив'язаний до іншої таблиці
+delete from `apr-2021`.students where age < 15 limit 1000; -- видалили студента з ід 11 і віком=10, він не прив'язанй до інших таблиць
